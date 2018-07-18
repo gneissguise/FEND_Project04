@@ -73,7 +73,7 @@ $(function() {
               $('.menu-icon-link').trigger('click');
               setTimeout(function() {
                 done();
-              }, 201);
+              }, 250);
             });
 
             it('it becomes visible', function() {
@@ -94,8 +94,12 @@ $(function() {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
-         it('has at least one entry', function() {
+         beforeEach(function(done){
+           loadFeed(0, done);
+         });
 
+         it('has at least one entry', function() {
+           expect($('.feed').has('.entry').length).toBeGreaterThan(0);
          });
     });
     /* TODO: Write a new test suite named "New Feed Selection" */
@@ -105,8 +109,20 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-         it('changes content when loaded', function() {
+         let entryOld;
 
+         beforeEach(function(done){
+           loadFeed(0, done);
+         });
+
+         beforeEach(function(done) {
+           entryOld = $('.feed .entry-link:first-child').text().trim();
+           loadFeed(1, done);
+         });
+
+         it('changes content when loaded', function() {
+           const entryNew = $('.feed .entry-link:first-child').text().trim();
+           expect(entryOld !== entryNew).toEqual(true);
          });
     });
 }());
